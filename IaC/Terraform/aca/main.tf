@@ -81,3 +81,7 @@ resource "azurerm_cosmosdb_sql_container" "cosmosdb_index01" {
     paths = ["/definition/idlong", "/definition/idshort"]
   }
 }
+
+
+
+
