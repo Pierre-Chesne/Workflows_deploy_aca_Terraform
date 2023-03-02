@@ -1,0 +1,26 @@
+name: Deploy Environnment
+on:
+  repository_dispatch:
+
+jobs:
+  Deploy_Environnment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.7
+
+      - name: Modify version.tf
+        run: |
+          cd ./IaC/Terraform/aca
+          sed -i -e s%\MY_TFSTATE%${{ toJSON(github.event.action) }}.tfstate% ./version.tf
+          cat version.tf
+
+      - name: Terraform init
+        run: |
+          cd ./IaC/Terraform/aca 
+          terraform init -backend-config="sas_token=${{ secrets.BACKENDSTORAGESASTOKEN }}"
